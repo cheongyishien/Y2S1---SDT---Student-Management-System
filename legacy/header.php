@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Staff Page</title>
+  <title>Bootstrap Example</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/bootstrap.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
   <style>
@@ -30,35 +30,24 @@
     <div class="collapse navbar-collapse" id="navbarColor01">
       <ul class="navbar-nav me-auto">
         <li class="nav-item">
-          <a class="nav-link" href="index.php">Home</a>
-        </li>
-        <!-- New Admin Functions -->
-        <li class="nav-item">
-           <a class="nav-link" href="admin_dashboard.php">Dashboard</a>
-        </li>
-        <li class="nav-item">
-           <a class="nav-link" href="admin_manage_courses.php">Manage Courses</a>
-        </li>
-        <li class="nav-item">
-           <a class="nav-link" href="admin_manage_registrations.php">Manage Registrations</a>
-        </li>
-         <li class="nav-item">
-           <a class="nav-link" href="profile.php">Profile</a>
-        </li>
-
+          <a class="nav-link active" href="index.php">About
+            <span class="visually-hidden">(current)</span>
+          </a>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">User</a>
           <div class="dropdown-menu">
-            <?php if(isset($_SESSION['u_id'])): ?>
-                <a class="dropdown-item" href="logout.php">Logout</a>
-             <?php else: ?>
-                <a class="dropdown-item" href="register.php">Register</a>
-                <a class="dropdown-item" href="login.php">Login</a>
-             <?php endif; ?>
+            <a class="dropdown-item" href="register.php">Register</a>
+            <a class="dropdown-item" href="login.php">Login</a>
           </div>
         </li>
       </ul>
-      
+      <form class="d-flex">
+        <input class="form-control me-sm-2" type="search" placeholder="Search">
+        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+      </form>
     </div>
   </div>
 </nav><br><br>
+
+</body>
+</html>

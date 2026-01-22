@@ -1,6 +1,6 @@
 </div>
 <div class="footer">
-  <p>&copy; 2026 Student Management System</p>
+  <p>Student Management System designed by Cheong</p>
 </div>
 </body>
 </html>

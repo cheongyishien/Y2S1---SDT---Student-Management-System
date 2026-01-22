@@ -4,7 +4,7 @@
   <title>Lecturer</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
   <style>
@@ -30,32 +30,29 @@
     <div class="collapse navbar-collapse" id="navbarColor01">
       <ul class="navbar-nav me-auto">
         <li class="nav-item">
-          <a class="nav-link active" href="index.php">Admin
-            <span class="visually-hidden">(current)</span>
-          </a>
+          <a class="nav-link" href="index.php">Home</a>
+        </li>
+         <!-- New Lecturer Functions -->
+        <li class="nav-item">
+          <a class="nav-link" href="lecturer_courses.php">My Courses</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Student</a>
+           <a class="nav-link" href="profile.php">Profile</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Academic</a>
-        </li>
+        
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">User</a>
           <div class="dropdown-menu">
-            <a class="dropdown-item" href="register.php">Register</a>
-            <a class="dropdown-item" href="login.php">Login</a>
-            <a class="dropdown-item" href="logout.php">Logout</a>
+             <?php if(isset($_SESSION['u_id'])): ?>
+                <a class="dropdown-item" href="logout.php">Logout</a>
+             <?php else: ?>
+                <a class="dropdown-item" href="register.php">Register</a>
+                <a class="dropdown-item" href="login.php">Login</a>
+             <?php endif; ?>
           </div>
         </li>
       </ul>
-      <form class="d-flex">
-        <input class="form-control me-sm-2" type="search" placeholder="Search">
-        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
-      </form>
+      
     </div>
   </div>
 </nav><br><br>
-
-</body>
-</html>
