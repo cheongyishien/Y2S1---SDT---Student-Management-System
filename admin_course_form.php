@@ -3,7 +3,7 @@ include 'includes/db.php';
 include 'includes/auth.php';
 checkSession();
 checkRole(['01']);
-include 'headerstaff.php';
+include 'headeradmin.php';
 
 $c_code = isset($_GET['cid']) ? $_GET['cid'] : '';
 $section = isset($_GET['section']) ? $_GET['section'] : '';

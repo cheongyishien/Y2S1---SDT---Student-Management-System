@@ -3,7 +3,7 @@ include 'includes/db.php';
 include 'includes/auth.php';
 checkSession();
 checkRole(['01']);
-include 'headerstaff.php';
+include 'headeradmin.php';
 
 $semester_id = $_GET['sid'] ?? '';
 
@@ -32,7 +32,7 @@ if (!$semester) {
 $sql_courses = "SELECT c.*, u.u_name as lecturer_name,
                 (SELECT COUNT(*) FROM tb_registration r 
                  WHERE r.r_course_code = c.c_code AND r.r_section = c.c_section 
-                 AND r.r_status != 'Cancelled') as enrolled_count
+                 AND r.r_status = 'Approved') as enrolled_count
                 FROM tb_course c
                 LEFT JOIN tb_user u ON c.c_lecturer_id = u.u_id
                 WHERE c.c_semester_id = ?
@@ -112,6 +112,9 @@ $courses_result = mysqli_stmt_get_result($stmt);
                                     </button>
                                     <button class="btn btn-info" onclick="window.location.href='admin_manage_section_registrations.php?cid=<?php echo urlencode($course['c_code']); ?>&section=<?php echo urlencode($course['c_section']); ?>'">
                                         Registrations
+                                    </button>
+                                    <button class="btn btn-danger" onclick="if(confirm('Are you sure you want to delete this course section?')) window.location.href='admin_course_process.php?action=delete&cid=<?php echo urlencode($course['c_code']); ?>&section=<?php echo urlencode($course['c_section']); ?>&sid=<?php echo $semester_id; ?>'">
+                                        Delete
                                     </button>
                                 </div>
                             </td>

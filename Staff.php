@@ -4,7 +4,7 @@
   {
     session_start();
   }
-  include 'headerstaff.php';
+  include 'headeradmin.php';
 ?>
 
 Staff Page

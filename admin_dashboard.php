@@ -3,7 +3,7 @@ include 'includes/db.php';
 include 'includes/auth.php';
 checkSession();
 checkRole(['01']);
-include 'headerstaff.php';
+include 'headeradmin.php';
 
 // Get faculty statistics
 $sql_faculties = "SELECT f.f_id, f.f_name,
@@ -12,7 +12,7 @@ $sql_faculties = "SELECT f.f_id, f.f_name,
                   (SELECT COUNT(DISTINCT r.r_student_id) 
                    FROM tb_registration r 
                    INNER JOIN tb_course c ON r.r_course_code = c.c_code 
-                   WHERE c.c_faculty = f.f_id AND r.r_status != 'Cancelled') as student_count
+                   WHERE c.c_faculty = f.f_id AND r.r_status = 'Approved') as student_count
                   FROM tb_faculty f
                   WHERE f.f_id != ''
                   ORDER BY f.f_name";

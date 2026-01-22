@@ -39,7 +39,12 @@ while ($row = mysqli_fetch_assoc($result)) {
 
 <div class="row">
     <div class="col-lg-12">
-        <h2>My Courses</h2><br>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>My Courses</h2>
+            <a href="student_register.php" class="btn btn-success">
+                <i class="bi bi-plus-circle"></i> Register for New Course
+            </a>
+        </div>
         <!-- 5b. View current and previous semester courses -->
         
         <?php if (empty($courses_by_semester)): ?>

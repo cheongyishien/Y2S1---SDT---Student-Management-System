@@ -38,4 +38,4 @@ if (!$student) {
     </div>
 </div>
 
-<?php include 'views/footer.php'; ?>
+<?php include 'footer.php'; ?>

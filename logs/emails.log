@@ -98,3 +98,57 @@ BODY:
     
     
 --------------------------------------------------
+[2026-01-22 18:27:12] TO: cheongyishien65@gmail.com | SUBJECT: Course Registration Rejected - SECP3724
+BODY: 
+    
+    
+        
+            body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; }
+            .container { max-width: 600px; margin: 20px auto; border: 1px solid #e1e1e1; border-radius: 8px; overflow: hidden; }
+            .header { background: linear-gradient(135deg, #dc3545 0%, #a71d2a 100%); color: white; padding: 30px; text-align: center; }
+            .content { padding: 30px; background-color: #ffffff; }
+            .footer { background-color: #f8f9fa; padding: 20px; text-align: center; font-size: 12px; color: #6c757d; border-top: 1px solid #e1e1e1; }
+            .course-info { background-color: #fdf2f2; border: 1px solid #f5c6cb; border-radius: 6px; padding: 20px; margin: 20px 0; }
+            .reason-box { background-color: #fff; border-left: 4px solid #dc3545; padding: 15px; margin: 15px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+            .btn { display: inline-block; padding: 10px 20px; background-color: #dc3545; color: white !important; text-decoration: none; border-radius: 5px; margin-top: 20px; }
+            h2 { margin: 0; text-transform: uppercase; letter-spacing: 1px; }
+        
+    
+    
+        
+            
+                Registration Rejected
+            
+            
+                Hello Cheong Yi Shien,
+                
+                Your registration request for the following course has been rejected by the academic administration:
+                
+                
+                    
+                        Course Code:SECP3724
+                        Course Name:Software Engineering Project
+                        Section:01
+                    
+                
+                
+                
+                    Reason for Rejection:
+                    Example Reject Reason
+                
+                
+                If you have any questions regarding this decision, please reach out to the Registrar's Office or your Academic Advisor.
+                
+                You can view other available courses or try registering for a different section via the portal.
+                
+                Go to Student Portal Space
+            
+            
+                Student Management System - Academic Administration
+                This is an automated notification. Please do not reply to this email.
+            
+        
+    
+    
+    
+--------------------------------------------------

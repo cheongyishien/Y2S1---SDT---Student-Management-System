@@ -46,13 +46,13 @@ class AuthController extends Controller {
     private function redirectBasedOnRole() {
          $type = $_SESSION['u_type'];
          if ($type == '01') { 
-             header('Location: index.php?controller=admin&action=dashboard');
+             header('Location: ../admin_dashboard.php');
          } elseif ($type == '02') { 
-             header('Location: index.php?controller=lecturer&action=courses');
+             header('Location: ../lecturer_dashboard.php');
          } elseif ($type == '03') { 
-             header('Location: index.php?controller=student&action=courses');
+             header('Location: ../student_dashboard.php');
          } else {
-             header('Location: index.php');
+             header('Location: ../index.php');
          }
          exit();
     }

@@ -3,7 +3,7 @@ include 'includes/db.php';
 include 'includes/auth.php';
 checkSession();
 checkRole(['01']);
-include 'headerstaff.php';
+include 'headeradmin.php';
 
 $r_id = $_GET['r_id'];
 

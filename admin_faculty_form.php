@@ -3,7 +3,7 @@ include 'includes/db.php';
 include 'includes/auth.php';
 checkSession();
 checkRole(['01']);
-include 'headerstaff.php';
+include 'headeradmin.php';
 
 $faculty_id = isset($_GET['fid']) ? $_GET['fid'] : '';
 $isEdit = !empty($faculty_id);

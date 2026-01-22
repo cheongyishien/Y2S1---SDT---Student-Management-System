@@ -12,9 +12,9 @@ if (verifyLogin($email, $pwd, $con)) {
     if ($type == '01') {
         header('Location: admin_dashboard.php');
     } elseif ($type == '02') {
-        header('Location: lecturer_courses.php');
+        header('Location: lecturer_dashboard.php');
     } elseif ($type == '03') {
-        header('Location: student_courses.php');
+        header('Location: student_dashboard.php');
     } else {
         header('Location: index.php');
     }

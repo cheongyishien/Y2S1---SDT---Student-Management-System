@@ -41,38 +41,52 @@ $courses_result = mysqli_stmt_get_result($stmt);
         
         <?php if (mysqli_num_rows($courses_result) == 0): ?>
             <div class="alert alert-info">No courses available for your programme at this time.</div>
-        <?php else: ?>
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>Course Code</th>
-                            <th>Course Name</th>
-                            <th>Credit</th>
-                            <th>Semester</th>
-                            <th>Sections Available</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php while ($course = mysqli_fetch_assoc($courses_result)): ?>
-                        <tr>
-                            <td><?php echo htmlspecialchars($course['c_code']); ?></td>
-                            <td><?php echo htmlspecialchars($course['c_name']); ?></td>
-                            <td><?php echo htmlspecialchars($course['c_credit']); ?></td>
-                            <td><?php echo htmlspecialchars($course['sem_year'] . ' ' . $course['sem_name']); ?></td>
-                            <td><?php echo htmlspecialchars($course['section_count']); ?></td>
-                            <td>
-                                <button class="btn btn-primary btn-sm" 
-                                        onclick="showSections('<?php echo htmlspecialchars($course['c_code']); ?>', '<?php echo htmlspecialchars($course['c_name']); ?>')">
-                                    View Sections
-                                </button>
-                            </td>
-                        </tr>
-                        <?php endwhile; ?>
-                    </tbody>
-                </table>
+        <?php else: 
+            $courses_by_sem = [];
+            while ($row = mysqli_fetch_assoc($courses_result)) {
+                $sem_label = $row['sem_year'] . ' ' . $row['sem_name'];
+                $courses_by_sem[$sem_label][] = $row;
+            }
+            
+            foreach ($courses_by_sem as $sem_label => $courses):
+        ?>
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Semester: <?php echo htmlspecialchars($sem_label); ?></h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Course Code</th>
+                                    <th>Course Name</th>
+                                    <th>Credit</th>
+                                    <th>Sections</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($courses as $course): ?>
+                                <tr>
+                                    <td><?php echo htmlspecialchars($course['c_code']); ?></td>
+                                    <td><?php echo htmlspecialchars($course['c_name']); ?></td>
+                                    <td><?php echo htmlspecialchars($course['c_credit']); ?></td>
+                                    <td><?php echo htmlspecialchars($course['section_count']); ?></td>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm" 
+                                                onclick="showSections('<?php echo htmlspecialchars($course['c_code']); ?>', '<?php echo htmlspecialchars($course['c_name']); ?>')">
+                                            View Sections
+                                        </button>
+                                    </td>
+                                </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
+            <?php endforeach; ?>
         <?php endif; ?>
     </div>
 </div>

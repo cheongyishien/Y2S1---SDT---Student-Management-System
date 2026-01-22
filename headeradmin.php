@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Staff Page</title>
+  <title>Admin Page</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="assets/css/bootstrap.min.css" rel="stylesheet">
@@ -31,6 +31,9 @@
       <ul class="navbar-nav me-auto">
         <li class="nav-item">
           <a class="nav-link" href="admin_dashboard.php">Dashboard</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="admin_lecturer_list.php">Lecturers</a>
         </li>
       </ul>
       

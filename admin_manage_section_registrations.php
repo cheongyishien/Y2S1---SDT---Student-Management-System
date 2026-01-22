@@ -3,7 +3,7 @@ include 'includes/db.php';
 include 'includes/auth.php';
 checkSession();
 checkRole(['01']);
-include 'headerstaff.php';
+include 'headeradmin.php';
 
 $course_code = $_GET['cid'] ?? '';
 $section = $_GET['section'] ?? '';
@@ -47,13 +47,22 @@ $registrations_result = mysqli_stmt_get_result($stmt);
     <div class="col-lg-12">
         <h2>Manage Registrations</h2>
         <h4><?php echo htmlspecialchars($course['c_code'] . ' - ' . $course['c_name']); ?></h4>
+        <?php 
+        $total_enrolled = 0;
+        $temp_registrations = [];
+        while ($r = mysqli_fetch_assoc($registrations_result)) {
+            if ($r['r_status'] == 'Approved') $total_enrolled++;
+            $temp_registrations[] = $r;
+        }
+        ?>
         <p class="text-muted">
             Section <?php echo htmlspecialchars($section); ?> | 
             Lecturer: <?php echo htmlspecialchars($course['lecturer_name'] ?? 'TBA'); ?> |
-            Semester: <?php echo htmlspecialchars($course['sem_year'] . ' ' . $course['sem_name']); ?>
+            Semester: <?php echo htmlspecialchars($course['sem_year'] . ' ' . $course['sem_name']); ?> |
+            <strong>Enrolled: <?php echo $total_enrolled; ?> / <?php echo $course['c_max_students']; ?></strong>
         </p>
         
-        <?php if (mysqli_num_rows($registrations_result) == 0): ?>
+        <?php if (empty($temp_registrations)): ?>
             <div class="alert alert-info">No registrations found for this section.</div>
         <?php else: ?>
             <div class="table-responsive">
@@ -69,7 +78,7 @@ $registrations_result = mysqli_stmt_get_result($stmt);
                         </tr>
                     </thead>
                     <tbody>
-                        <?php while ($reg = mysqli_fetch_assoc($registrations_result)): ?>
+                        <?php foreach ($temp_registrations as $reg): ?>
                         <tr>
                             <td><?php echo htmlspecialchars($reg['u_name']); ?></td>
                             <td><?php echo htmlspecialchars($reg['u_email']); ?></td>
@@ -91,7 +100,7 @@ $registrations_result = mysqli_stmt_get_result($stmt);
                                         Approve
                                     </button>
                                     <?php endif; ?>
-                                    <button class="btn btn-danger btn-sm" onclick="showRejectModal(<?php echo $reg['r_id']; ?>, '<?php echo htmlspecialchars($reg['u_name']); ?>', '<?php echo htmlspecialchars($reg['u_email']); ?>')">
+                                    <button class="btn btn-danger btn-sm" onclick="showRejectModal(<?php echo $reg['r_id']; ?>, '<?php echo addslashes($reg['u_name']); ?>', '<?php echo addslashes($reg['u_email']); ?>')">
                                         Reject
                                     </button>
                                 <?php elseif ($reg['r_status'] == 'Rejected'): ?>
@@ -101,7 +110,7 @@ $registrations_result = mysqli_stmt_get_result($stmt);
                                 <?php endif; ?>
                             </td>
                         </tr>
-                        <?php endwhile; ?>
+                        <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>

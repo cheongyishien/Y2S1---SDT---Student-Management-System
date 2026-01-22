@@ -26,7 +26,8 @@ include 'headerlecturer.php';
                 $lecturer_id = $_SESSION['u_id'];
                 $sid = isset($_GET['sid']) ? $_GET['sid'] : '';
                 
-                $sql = "SELECT c.*, s.sem_year, s.sem_name 
+                $sql = "SELECT c.*, s.sem_year, s.sem_name,
+                        (SELECT COUNT(*) FROM tb_registration r WHERE r.r_course_code = c.c_code AND r.r_section = c.c_section AND r.r_status = 'Approved') as approved_count 
                         FROM tb_course c 
                         LEFT JOIN tb_semester s ON c.c_semester_id = s.sem_id 
                         WHERE c.c_lecturer_id = ?";
@@ -53,9 +54,10 @@ include 'headerlecturer.php';
                         echo "<td>" . htmlspecialchars($row['c_name']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['c_section']) . "</td>";
                         echo "<td>" . htmlspecialchars($sem_info) . "</td>";
-                        echo "<td>{$row['c_current_students']} / {$row['c_max_students']}</td>";
+                        echo "<td>{$row['approved_count']} / {$row['c_max_students']}</td>";
                         echo "<td>
-                                <a href='lecturer_student_list.php?c_code=".urlencode($row['c_code'])."&section=".urlencode($row['c_section'])."' class='btn btn-info btn-sm'>View Students</a>
+                                <a href='lecturer_student_list.php?c_code=".urlencode($row['c_code'])."&section=".urlencode($row['c_section'])."' class='btn btn-info btn-sm'>Students</a>
+                                <a href='lecturer_course_details.php?cid=".urlencode($row['c_code'])."&section=".urlencode($row['c_section'])."' class='btn btn-primary btn-sm'>Details</a>
                               </td>";
                         echo "</tr>";
                     }

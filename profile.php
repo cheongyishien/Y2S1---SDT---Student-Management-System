@@ -5,7 +5,7 @@ checkSession();
 
 // Determine header based on role
 if ($_SESSION['u_type'] == '01') {
-    include 'headerstaff.php';
+    include 'headeradmin.php';
 } elseif ($_SESSION['u_type'] == '02') {
     include 'headerlecturer.php';
 } else {
@@ -76,4 +76,4 @@ $user = mysqli_fetch_assoc($res);
   </div>
 </div>
 
-<?php include 'views/footer.php'; ?>
+<?php include 'footer.php'; ?>
