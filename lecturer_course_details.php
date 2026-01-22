@@ -81,7 +81,7 @@ $students_res = mysqli_stmt_get_result($stmt_s);
                             <td><?php echo htmlspecialchars($student['u_name']); ?></td>
                             <td><?php echo htmlspecialchars($student['u_email']); ?></td>
                             <td>
-                                <a href="lecturer_student_details.php?u_id=<?php echo $student['u_id']; ?>" class="btn btn-info btn-sm">View Profile</a>
+                                <a href="lecturer_student_details.php?u_id=<?php echo $student['u_id']; ?>" class="btn btn-info btn-sm">View Details</a>
                             </td>
                         </tr>
                         <?php endwhile; ?>

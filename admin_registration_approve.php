@@ -1,6 +1,6 @@
 <?php
 include 'includes/db.php';
-include 'includes/auth.php';
+include 'includes/email.php';
 checkSession();
 checkRole(['01']);
 
@@ -10,8 +10,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     mysqli_begin_transaction($con);
     
     try {
-        // Get registration details first
-        $sql_info = "SELECT r_course_code, r_section, r_status FROM tb_registration WHERE r_id = ?";
+        // Get registration details with student and course info for the email
+        $sql_info = "SELECT r.r_course_code, r.r_section, r.r_status, u.u_name, u.u_email, c.c_name
+                     FROM tb_registration r
+                     INNER JOIN tb_user u ON r.r_student_id = u.u_id
+                     INNER JOIN tb_course c ON r.r_course_code = c.c_code AND r.r_section = c.c_section
+                     WHERE r.r_id = ?";
         $stmt_info = mysqli_prepare($con, $sql_info);
         mysqli_stmt_bind_param($stmt_info, "i", $r_id);
         mysqli_stmt_execute($stmt_info);
@@ -42,7 +46,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         
         mysqli_commit($con);
         
-        echo "<script>alert('Registration approved successfully'); window.history.back();</script>";
+        // Send approval email
+        sendApprovalEmail(
+            $reg['u_email'],
+            $reg['u_name'],
+            $reg['r_course_code'],
+            $reg['c_name'],
+            $reg['r_section']
+        );
+        
+        echo "<script>alert('Registration approved and email notification sent'); window.history.back();</script>";
         
     } catch (Exception $e) {
         mysqli_rollback($con);

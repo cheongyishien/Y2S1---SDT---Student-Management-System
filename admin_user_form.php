@@ -33,8 +33,8 @@ if ($isEdit) {
 
 <div class="row justify-content-center">
   <div class="col-md-8">
-    <div class="card border-primary mb-3">
-      <div class="card-header"><?php echo $isEdit ? "Edit User" : "Add New User"; ?></div>
+    <div class="card border-success mb-3">
+      <div class="card-header bg-success text-white"><?php echo $isEdit ? "Edit User" : "Add New User"; ?></div>
       <div class="card-body">
         <form method="POST" action="admin_user_process.php">
           <input type="hidden" name="action" value="<?php echo $isEdit ? 'update' : 'add'; ?>">
@@ -64,7 +64,7 @@ if ($isEdit) {
           <div class="row mb-3">
               <div class="col-md-4">
                   <label class="form-label">Phone Operator</label>
-                  <input type="number" name="u_phone_operator" class="form-control" value="<?php echo htmlspecialchars($user['u_phone_operator']); ?>" required>
+                  <input type="number" name="u_phone_operator" class="form-control" value="<?php echo htmlspecialchars($user['u_phone_operator']); ?>" placeholder="e.g. 012" required>
               </div>
               <div class="col-md-8">
                   <label class="form-label">Phone Number</label>
@@ -102,8 +102,8 @@ if ($isEdit) {
           </div>
 
           <div class="d-grid gap-2">
-            <button type="submit" class="btn btn-primary"><?php echo $isEdit ? "Update User" : "Create User"; ?></button>
-            <a href="admin_lecturer_list.php" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-success"><?php echo $isEdit ? "Update User" : "Create User"; ?></button>
+            <a href="<?php echo $user['u_type'] == '01' ? 'admin_list.php' : 'admin_lecturer_list.php'; ?>" class="btn btn-secondary">Cancel</a>
           </div>
         </form>
       </div>

@@ -34,7 +34,8 @@ $semesters_result = mysqli_stmt_get_result($stmt);
             <?php while ($semester = mysqli_fetch_assoc($semesters_result)): ?>
             <div class="col-md-6 col-lg-4 mb-4">
                 <div class="card h-100 shadow-sm border-info">
-                    <div class="card-header bg-info text-white">
+                    <div class="card-header bg-success text-white">
+                        
                         <h5 class="mb-0"><?php echo htmlspecialchars($semester['sem_year']); ?></h5>
                         <small><?php echo htmlspecialchars($semester['sem_name']); ?></small>
                     </div>

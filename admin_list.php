@@ -5,11 +5,11 @@ checkSession();
 checkRole(['01']);
 include 'headeradmin.php';
 
-// Get all lecturers
+// Get all admins (excluding current if needed? usually better to show all)
 $sql = "SELECT u.*, p.p_name as programme_name 
         FROM tb_user u 
         LEFT JOIN tb_program p ON u.u_programme = p.p_id 
-        WHERE u.u_type = '02' 
+        WHERE u.u_type = '01' 
         ORDER BY u.u_name";
 $result = mysqli_query($con, $sql);
 ?>
@@ -17,12 +17,16 @@ $result = mysqli_query($con, $sql);
 <div class="row">
     <div class="col-lg-12">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2>Manage Lecturers</h2>
-            <a href="admin_user_form.php?type=02" class="btn btn-success">
-                <i class="bi bi-person-plus"></i> Add New Lecturer
+            <h2>Manage Admins</h2>
+            <a href="admin_user_form.php?type=01" class="btn btn-success">
+                <i class="bi bi-person-plus"></i> Add New Admin
             </a>
         </div>
         
+        <?php if (isset($_GET['msg'])): ?>
+            <div class="alert alert-success"><?php echo htmlspecialchars($_GET['msg']); ?></div>
+        <?php endif; ?>
+
         <div class="table-responsive">
             <table class="table table-hover">
                 <thead>

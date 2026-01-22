@@ -33,6 +33,9 @@
           <a class="nav-link" href="admin_dashboard.php">Dashboard</a>
         </li>
         <li class="nav-item">
+          <a class="nav-link" href="admin_list.php">Admins</a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link" href="admin_lecturer_list.php">Lecturers</a>
         </li>
       </ul>
