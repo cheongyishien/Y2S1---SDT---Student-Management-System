@@ -13,7 +13,7 @@
    left: 0;
    bottom: 0;
    width: 100%;
-   background-color: #ffb380;
+   background-color: #2d3e50;
    color: white;
    text-align: center;
 }
@@ -23,40 +23,35 @@
 
 <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
   <div class="container-fluid">
-    <a class="navbar-brand" href="index.php">Student Management System</a>
+    <a class="navbar-brand" href="admin_dashboard.php">Student Management System</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarColor01">
       <ul class="navbar-nav me-auto">
         <li class="nav-item">
-          <a class="nav-link" href="index.php">Home</a>
+          <a class="nav-link" href="admin_dashboard.php">Dashboard</a>
         </li>
-        <!-- New Admin Functions -->
-        <li class="nav-item">
-           <a class="nav-link" href="admin_dashboard.php">Dashboard</a>
-        </li>
-        <li class="nav-item">
-           <a class="nav-link" href="admin_manage_courses.php">Manage Courses</a>
-        </li>
-        <li class="nav-item">
-           <a class="nav-link" href="admin_manage_registrations.php">Manage Registrations</a>
-        </li>
-         <li class="nav-item">
-           <a class="nav-link" href="profile.php">Profile</a>
-        </li>
-
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">User</a>
-          <div class="dropdown-menu">
-            <?php if(isset($_SESSION['u_id'])): ?>
+      </ul>
+      
+      <!-- User Profile Dropdown on the Right -->
+      <ul class="navbar-nav ms-auto">
+        <?php if(isset($_SESSION['u_id'])): ?>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                <?php echo isset($_SESSION['u_name']) ? $_SESSION['u_name'] : 'User'; ?>
+              </a>
+              <div class="dropdown-menu dropdown-menu-end">
+                <a class="dropdown-item" href="profile.php">Profile Settings</a>
+                <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="logout.php">Logout</a>
-             <?php else: ?>
-                <a class="dropdown-item" href="register.php">Register</a>
-                <a class="dropdown-item" href="login.php">Login</a>
-             <?php endif; ?>
-          </div>
-        </li>
+              </div>
+            </li>
+        <?php else: ?>
+             <li class="nav-item">
+                <a class="nav-link" href="login.php">Login</a>
+             </li>
+        <?php endif; ?>
       </ul>
       
     </div>

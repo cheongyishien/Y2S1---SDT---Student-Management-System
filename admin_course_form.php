@@ -5,20 +5,44 @@ checkSession();
 checkRole(['01']);
 include 'headerstaff.php';
 
-$c_code = isset($_GET['c_code']) ? $_GET['c_code'] : '';
-$isEdit = !empty($c_code);
-// 7a. Add new course details with number of maximum students
-$course = ['c_code'=>'', 'c_name'=>'', 'c_credit'=>3, 'c_section'=>1, 'c_max_students'=>30, 'c_lecturer_id'=>''];
+$c_code = isset($_GET['cid']) ? $_GET['cid'] : '';
+$section = isset($_GET['section']) ? $_GET['section'] : '';
+$sid = isset($_GET['sid']) ? $_GET['sid'] : '';
+$isEdit = !empty($c_code) && !empty($section);
+
+// Course structure with new fields
+$course = [
+    'c_code' => '', 
+    'c_name' => '', 
+    'c_credit' => 3, 
+    'c_section' => 1, 
+    'c_max_students' => 30, 
+    'c_lecturer_id' => '', 
+    'c_semester_id' => $sid,
+    'c_programmes' => '',
+    'c_faculty' => ''
+];
 
 if ($isEdit) {
-    $stmt = mysqli_prepare($con, "SELECT * FROM tb_course WHERE c_code = ?");
-    mysqli_stmt_bind_param($stmt, "s", $c_code);
+    $stmt = mysqli_prepare($con, "SELECT * FROM tb_course WHERE c_code = ? AND c_section = ?");
+    mysqli_stmt_bind_param($stmt, "ss", $c_code, $section);
     mysqli_stmt_execute($stmt);
     $res = mysqli_stmt_get_result($stmt);
     if ($row = mysqli_fetch_assoc($res)) {
         $course = $row;
     }
 }
+
+// Get all programmes for the multi-select
+$programs_sql = "SELECT p_id, p_name FROM tb_program ORDER BY p_name";
+$programs_res = mysqli_query($con, $programs_sql);
+$all_programs = [];
+while($p_row = mysqli_fetch_assoc($programs_res)) {
+    $all_programs[] = $p_row;
+}
+
+// Current checked programmes
+$current_progs = !empty($course['c_programmes']) ? explode(',', $course['c_programmes']) : [];
 ?>
 
 <div class="row justify-content-center">
@@ -28,6 +52,8 @@ if ($isEdit) {
       <div class="card-body">
         <form method="POST" action="admin_course_process.php">
           <input type="hidden" name="action" value="<?php echo $isEdit ? 'update' : 'add'; ?>">
+          <input type="hidden" name="old_section" value="<?php echo htmlspecialchars($section); ?>">
+          <input type="hidden" name="c_semester_id" value="<?php echo htmlspecialchars($course['c_semester_id']); ?>">
           
           <div class="form-group">
             <label class="form-label mt-4">Course Code</label>
@@ -75,13 +101,33 @@ if ($isEdit) {
                  ?>
              </select>
            </div>
+
+           <!-- Programme Restrictions -->
+           <div class="form-group">
+             <label class="form-label mt-4">Programme Restrictions (Optional)</label>
+             <div class="row mt-2">
+                <?php foreach($all_programs as $p): ?>
+                   <div class="col-md-6">
+                      <div class="form-check">
+                         <input class="form-check-input" type="checkbox" name="c_programmes[]" value="<?php echo $p['p_id']; ?>" id="p_<?php echo $p['p_id']; ?>" <?php echo in_array($p['p_id'], $current_progs) ? 'checked' : ''; ?>>
+                         <label class="form-check-label" for="p_<?php echo $p['p_id']; ?>">
+                            <?php echo htmlspecialchars($p['p_name']); ?>
+                         </label>
+                      </div>
+                   </div>
+                <?php endforeach; ?>
+             </div>
+             <small class="text-muted">If none selected, all programmes can register.</small>
+           </div>
            
            <br>
            <button type="submit" class="btn btn-primary"><?php echo $isEdit ? "Update" : "Add"; ?></button>
+           <a href="admin_semester_courses.php?sid=<?php echo $course['c_semester_id']; ?>" class="btn btn-secondary">Cancel</a>
         </form>
       </div>
     </div>
   </div>
 </div>
 
-<?php include 'views/footer.php'; ?>
+<?php include 'footer.php'; ?>
+

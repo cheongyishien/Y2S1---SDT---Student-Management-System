@@ -6,28 +6,40 @@ checkRole(['03']);
 include 'headerstudent.php';
 
 $student_id = $_SESSION['u_id'];
+$sid = isset($_GET['sid']) ? $_GET['sid'] : '';
 
 // Get all registrations ordered by semester desc
-$sql = "SELECT r.*, c.c_name, c.c_credit, c.c_section 
+$sql = "SELECT r.*, c.c_name, c.c_credit, c.c_section, u.u_name as lecturer_name, s.sem_year, s.sem_name
         FROM tb_registration r 
-        JOIN tb_course c ON r.r_course_code = c.c_code 
-        WHERE r.r_student_id = ? 
-        ORDER BY r.r_semester DESC, r.r_course_code ASC";
+        JOIN tb_course c ON r.r_course_code = c.c_code AND r.r_section = c.c_section
+        LEFT JOIN tb_user u ON c.c_lecturer_id = u.u_id
+        LEFT JOIN tb_semester s ON c.c_semester_id = s.sem_id
+        WHERE r.r_student_id = ?";
+
+if (!empty($sid)) {
+    $sql .= " AND c.c_semester_id = ?";
+}
+$sql .= " ORDER BY s.sem_year DESC, s.sem_name, r.r_course_code ASC";
 
 $stmt = mysqli_prepare($con, $sql);
-mysqli_stmt_bind_param($stmt, "i", $student_id);
+if (!empty($sid)) {
+    mysqli_stmt_bind_param($stmt, "ii", $student_id, $sid);
+} else {
+    mysqli_stmt_bind_param($stmt, "i", $student_id);
+}
 mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
 
 $courses_by_semester = [];
 while ($row = mysqli_fetch_assoc($result)) {
-    $courses_by_semester[$row['r_semester']][] = $row;
+    $sem_label = $row['sem_year'] ? $row['sem_year'].' '.$row['sem_name'] : $row['r_semester'];
+    $courses_by_semester[$sem_label][] = $row;
 }
 ?>
 
 <div class="row">
     <div class="col-lg-12">
-        <h2>My Courses</h2>
+        <h2>My Courses</h2><br>
         <!-- 5b. View current and previous semester courses -->
         
         <?php if (empty($courses_by_semester)): ?>
@@ -46,6 +58,7 @@ while ($row = mysqli_fetch_assoc($result)) {
                                     <th>Course Name</th>
                                     <th>Credit</th>
                                     <th>Section</th>
+                                    <th>Lecturer</th>
                                     <th>Status</th>
                                     <th>Action</th>
                                 </tr>
@@ -56,7 +69,8 @@ while ($row = mysqli_fetch_assoc($result)) {
                                     <td><?php echo htmlspecialchars($course['r_course_code']); ?></td>
                                     <td><?php echo htmlspecialchars($course['c_name']); ?></td>
                                     <td><?php echo htmlspecialchars($course['c_credit']); ?></td>
-                                    <td><?php echo htmlspecialchars($course['c_section']); ?></td>
+                                    <td><?php echo htmlspecialchars($course['r_section']); ?></td>
+                                    <td><?php echo htmlspecialchars($course['lecturer_name'] ?? 'TBA'); ?></td>
                                     <td>
                                         <span class="badge <?php echo $course['r_status'] == 'Approved' ? 'bg-success' : 'bg-warning'; ?>">
                                             <?php echo htmlspecialchars($course['r_status']); ?>
@@ -83,4 +97,5 @@ while ($row = mysqli_fetch_assoc($result)) {
     </div>
 </div>
 
-<?php include 'views/footer.php'; ?>
+<?php include 'footer.php'; ?>
+

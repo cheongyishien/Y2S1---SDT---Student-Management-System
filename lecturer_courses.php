@@ -8,15 +8,15 @@ include 'headerlecturer.php';
 
 <div class="row">
     <div class="col-lg-12">
-        <h2>My Classes</h2>
-        <p>Courses assigned to you.</p>
+        <h2>My Classes</h2><br>
         
         <table class="table table-hover">
             <thead>
                 <tr>
                     <th>Code</th>
                     <th>Course Name</th>
-                    <th>Status</th>
+                    <th>Section</th>
+                    <th>Semester</th>
                     <th>Students</th>
                     <th>Action</th>
                 </tr>
@@ -24,28 +24,43 @@ include 'headerlecturer.php';
             <tbody>
                 <?php
                 $lecturer_id = $_SESSION['u_id'];
-                // 6a. View assigned courses
-                $sql = "SELECT * FROM tb_course WHERE c_lecturer_id = ?";
+                $sid = isset($_GET['sid']) ? $_GET['sid'] : '';
+                
+                $sql = "SELECT c.*, s.sem_year, s.sem_name 
+                        FROM tb_course c 
+                        LEFT JOIN tb_semester s ON c.c_semester_id = s.sem_id 
+                        WHERE c.c_lecturer_id = ?";
+                
+                if (!empty($sid)) {
+                    $sql .= " AND c.c_semester_id = ?";
+                }
+                $sql .= " ORDER BY s.sem_year DESC, s.sem_name, c.c_code, c.c_section";
+                
                 $stmt = mysqli_prepare($con, $sql);
-                mysqli_stmt_bind_param($stmt, "i", $lecturer_id);
+                if (!empty($sid)) {
+                    mysqli_stmt_bind_param($stmt, "ii", $lecturer_id, $sid);
+                } else {
+                    mysqli_stmt_bind_param($stmt, "i", $lecturer_id);
+                }
                 mysqli_stmt_execute($stmt);
                 $result = mysqli_stmt_get_result($stmt);
 
                 if (mysqli_num_rows($result) > 0) {
                     while($row = mysqli_fetch_assoc($result)) {
+                        $sem_info = $row['sem_year'] ? $row['sem_year'].' '.$row['sem_name'] : 'N/A';
                         echo "<tr>";
-                        echo "<td>{$row['c_code']}</td>";
-                        echo "<td>{$row['c_name']}</td>";
-                        echo "<td>Active</td>"; // Simplified status
+                        echo "<td>" . htmlspecialchars($row['c_code']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['c_name']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['c_section']) . "</td>";
+                        echo "<td>" . htmlspecialchars($sem_info) . "</td>";
                         echo "<td>{$row['c_current_students']} / {$row['c_max_students']}</td>";
                         echo "<td>
-                                <a href='lecturer_student_list.php?c_code={$row['c_code']}' class='btn btn-info btn-sm'>View Students</a>
-                                <a href='lecturer_course_details.php?c_code={$row['c_code']}' class='btn btn-secondary btn-sm'>View Details</a>
+                                <a href='lecturer_student_list.php?c_code=".urlencode($row['c_code'])."&section=".urlencode($row['c_section'])."' class='btn btn-info btn-sm'>View Students</a>
                               </td>";
                         echo "</tr>";
                     }
                 } else {
-                    echo "<tr><td colspan='5'>No courses assigned.</td></tr>";
+                    echo "<tr><td colspan='6' class='text-center'>No courses assigned for this period.</td></tr>";
                 }
                 ?>
             </tbody>
@@ -53,4 +68,5 @@ include 'headerlecturer.php';
     </div>
 </div>
 
-<?php include 'views/footer.php'; ?>
+<?php include 'footer.php'; ?>
+

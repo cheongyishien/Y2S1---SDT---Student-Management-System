@@ -1,6 +1,6 @@
 <?php
 include 'includes/db.php';
-include 'views/header.php';
+include 'header.php';
 ?>
 
 <div class="row justify-content-center">
@@ -70,13 +70,29 @@ include 'views/header.php';
             </div>
 
             <div class="form-group">
-              <label for="fprogramme" class="form-label mt-4">Programme</label>
-              <select class="form-select" name="fprogramme" id="fprogramme">
+              <label for="ffaculty" class="form-label mt-4">Faculty</label>
+              <select class="form-select" name="ffaculty" id="ffaculty" required>
+                <option value="">-- Select Faculty --</option>
                 <?php
+                  $sql = "SELECT * FROM tb_faculty WHERE f_id != ''";
+                  $result = mysqli_query($con, $sql);
+                  while($row = mysqli_fetch_assoc($result)) {
+                      echo "<option value='".$row['f_id']."'>".$row['f_name']."</option>";
+                  }
+                ?>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="fprogramme" class="form-label mt-4">Programme</label>
+              <select class="form-select" name="fprogramme" id="fprogramme" required>
+                <option value="">-- Select Faculty First --</option>
+                <?php
+                  // Load all programs for JavaScript filtering
                   $sql = "SELECT * FROM tb_program";
                   $result = mysqli_query($con, $sql);
                   while($row = mysqli_fetch_assoc($result)) {
-                      echo "<option value='".$row['p_id']."'>".$row['p_name']."</option>";
+                      echo "<option value='".$row['p_id']."' data-faculty='".$row['p_faculty']."'>".$row['p_name']."</option>";
                   }
                 ?>
               </select>
@@ -106,6 +122,36 @@ include 'views/header.php';
   </div>
 </div>
 
+<script>
+// Filter programmes based on selected faculty
+document.getElementById('ffaculty').addEventListener('change', function() {
+    const selectedFaculty = this.value;
+    const programmeSelect = document.getElementById('fprogramme');
+    const allOptions = programmeSelect.querySelectorAll('option');
+    
+    // Reset programme dropdown
+    programmeSelect.value = '';
+    
+    // Show/hide options based on faculty
+    allOptions.forEach(option => {
+        if (option.value === '') {
+            option.style.display = 'block';
+            option.textContent = selectedFaculty ? '-- Select Programme --' : '-- Select Faculty First --';
+        } else {
+            const optionFaculty = option.getAttribute('data-faculty');
+            if (selectedFaculty === '' || optionFaculty === selectedFaculty) {
+                option.style.display = 'block';
+            } else {
+                option.style.display = 'none';
+            }
+        }
+    });
+});
+
+// Initialize on page load
+document.getElementById('ffaculty').dispatchEvent(new Event('change'));
+</script>
+
 <?php
-include 'views/footer.php';
+include 'footer.php';
 ?>

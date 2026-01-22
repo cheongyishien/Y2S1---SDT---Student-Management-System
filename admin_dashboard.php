@@ -5,48 +5,68 @@ checkSession();
 checkRole(['01']);
 include 'headerstaff.php';
 
-// Stats
-$stats = [];
-$res = mysqli_query($con, "SELECT COUNT(*) as c FROM tb_user WHERE u_type='03'"); $stats['students'] = mysqli_fetch_assoc($res)['c'];
-$res = mysqli_query($con, "SELECT COUNT(*) as c FROM tb_user WHERE u_type='02'"); $stats['lecturers'] = mysqli_fetch_assoc($res)['c'];
-$res = mysqli_query($con, "SELECT COUNT(*) as c FROM tb_course"); $stats['courses'] = mysqli_fetch_assoc($res)['c'];
+// Get faculty statistics
+$sql_faculties = "SELECT f.f_id, f.f_name,
+                  (SELECT COUNT(DISTINCT s.sem_id) FROM tb_semester s WHERE s.sem_faculty = f.f_id) as semester_count,
+                  (SELECT COUNT(*) FROM tb_course c WHERE c.c_faculty = f.f_id) as course_count,
+                  (SELECT COUNT(DISTINCT r.r_student_id) 
+                   FROM tb_registration r 
+                   INNER JOIN tb_course c ON r.r_course_code = c.c_code 
+                   WHERE c.c_faculty = f.f_id AND r.r_status != 'Cancelled') as student_count
+                  FROM tb_faculty f
+                  WHERE f.f_id != ''
+                  ORDER BY f.f_name";
+
+$faculties_result = mysqli_query($con, $sql_faculties);
 ?>
 
 <div class="row">
     <div class="col-lg-12">
-        <h2>Admin Dashboard</h2>
-        <div class="row mt-4">
-            <div class="col-md-4">
-                <div class="card text-white bg-primary mb-3">
-                  <div class="card-header">Total Students</div>
-                  <div class="card-body">
-                    <h4 class="card-title"><?php echo $stats['students']; ?></h4>
-                  </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card text-white bg-success mb-3">
-                  <div class="card-header">Total Lecturers</div>
-                  <div class="card-body">
-                    <h4 class="card-title"><?php echo $stats['lecturers']; ?></h4>
-                  </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card text-white bg-info mb-3">
-                  <div class="card-header">Total Courses</div>
-                  <div class="card-body">
-                    <h4 class="card-title"><?php echo $stats['courses']; ?></h4>
-                  </div>
-                </div>
-            </div>
+        <h2>Admin Dashboard</h2><br>
+        
+        <div class="mb-3">
+            <button class="btn btn-success" onclick="window.location.href='admin_faculty_form.php'">
+                <i class="bi bi-plus-circle"></i> Add New Faculty
+            </button>
         </div>
         
-        <div class="mt-4">
-            <button class="btn btn-secondary" onclick="window.location.href='admin_manage_courses.php'">Manage Courses</button>
-            <button class="btn btn-secondary" onclick="window.location.href='admin_manage_registrations.php'">Manage Registrations</button>
+        <div class="row">
+            <?php while ($faculty = mysqli_fetch_assoc($faculties_result)): ?>
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><?php echo htmlspecialchars($faculty['f_name']); ?></h5>
+                        <small><?php echo htmlspecialchars($faculty['f_id']); ?></small>
+                    </div>
+                    <div class="card-body">
+                        <div class="row text-center mb-3">
+                            <div class="col-4">
+                                <h4 class="text-primary"><?php echo $faculty['semester_count']; ?></h4>
+                                <small class="text-muted">Semesters</small>
+                            </div>
+                            <div class="col-4">
+                                <h4 class="text-success"><?php echo $faculty['course_count']; ?></h4>
+                                <small class="text-muted">Courses</small>
+                            </div>
+                            <div class="col-4">
+                                <h4 class="text-info"><?php echo $faculty['student_count']; ?></h4>
+                                <small class="text-muted">Students</small>
+                            </div>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-primary" onclick="window.location.href='admin_faculty_detail.php?fid=<?php echo urlencode($faculty['f_id']); ?>'">
+                                View Semesters
+                            </button>
+                            <button class="btn btn-outline-secondary btn-sm" onclick="window.location.href='admin_faculty_form.php?fid=<?php echo urlencode($faculty['f_id']); ?>'">
+                                Edit Faculty
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <?php endwhile; ?>
         </div>
     </div>
 </div>
 
-<?php include 'views/footer.php'; ?>
+<?php include 'footer.php'; ?>

@@ -13,7 +13,7 @@
    left: 0;
    bottom: 0;
    width: 100%;
-   background-color: #ffb380;
+   background-color: #2d3e50;
    color: white;
    text-align: center;
 }
@@ -29,10 +29,6 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarColor01">
       <ul class="navbar-nav me-auto">
-        <li class="nav-item">
-          <a class="nav-link active" href="index.php">About
-            <span class="visually-hidden">(current)</span>
-          </a>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">User</a>
           <div class="dropdown-menu">

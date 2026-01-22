@@ -1,7 +1,4 @@
 <?php
-session_start();
-session_unset();
-session_destroy();
-header("Location: index.php");
+// Redirect to MVC logout route
+header('Location: public/index.php?controller=auth&action=logout');
 exit();
-?>

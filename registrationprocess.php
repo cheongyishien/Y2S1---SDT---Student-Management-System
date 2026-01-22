@@ -8,6 +8,7 @@ $femail = $_POST['femail'];
 $foperator = $_POST['foperator'];
 $fphone = $_POST['fphone'];
 $fgender = $_POST['fgender'];
+$ffaculty = $_POST['ffaculty'];
 $fprogramme = $_POST['fprogramme'];
 $fcollege = $_POST['fcollege'];
 
@@ -21,11 +22,11 @@ if ($fpwd !== $fpwd_confirm) {
 $hashed_pwd = password_hash($fpwd, PASSWORD_DEFAULT);
 
 // SQL Injection Prevention (Prepared Statements)
-$sql = "INSERT INTO tb_user(u_pwd, u_name, u_phone_operator, u_phone_no, u_email, u_gender, u_programme, u_residential, u_type)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, '03')";
+$sql = "INSERT INTO tb_user(u_pwd, u_name, u_phone_operator, u_phone_no, u_email, u_gender, u_faculty, u_programme, u_residential, u_type)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, '03')";
 
 $stmt = mysqli_prepare($con, $sql);
-mysqli_stmt_bind_param($stmt, "ssiissss", $hashed_pwd, $fname, $foperator, $fphone, $femail, $fgender, $fprogramme, $fcollege);
+mysqli_stmt_bind_param($stmt, "ssiisssss", $hashed_pwd, $fname, $foperator, $fphone, $femail, $fgender, $ffaculty, $fprogramme, $fcollege);
 
 if (mysqli_stmt_execute($stmt)) {
     echo "<script>alert('Registration Successful. Please Login.'); window.location.href='login.php';</script>";

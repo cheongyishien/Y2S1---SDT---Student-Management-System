@@ -1,6 +1,6 @@
-<div class="footer">
-  <p>Designed by Cheong</p>
 </div>
-
+<div class="footer">
+  <p>Student Management System designed by Cheong Yi Shien</p>
+</div>
 </body>
 </html>
