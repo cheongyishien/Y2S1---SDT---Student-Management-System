@@ -24,8 +24,8 @@ $course = [
 ];
 
 if ($isEdit) {
-    $stmt = mysqli_prepare($con, "SELECT * FROM tb_course WHERE c_code = ? AND c_section = ?");
-    mysqli_stmt_bind_param($stmt, "ss", $c_code, $section);
+    $stmt = mysqli_prepare($con, "SELECT * FROM tb_course WHERE c_code = ? AND c_section = ? AND c_semester_id = ?");
+    mysqli_stmt_bind_param($stmt, "ssi", $c_code, $section, $sid);
     mysqli_stmt_execute($stmt);
     $res = mysqli_stmt_get_result($stmt);
     if ($row = mysqli_fetch_assoc($res)) {

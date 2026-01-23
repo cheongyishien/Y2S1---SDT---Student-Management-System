@@ -7,6 +7,7 @@ include 'headerstudent.php';
 
 $student_id = $_SESSION['u_id'];
 $student_programme = $_SESSION['u_programme'];
+$search = isset($_GET['search']) ? trim($_GET['search']) : '';
 
 // Get student's faculty
 $sql_faculty = "SELECT p.p_faculty FROM tb_program p WHERE p.p_id = ?";
@@ -25,22 +26,45 @@ $sql = "SELECT DISTINCT c.c_code, c.c_name, c.c_credit, c.c_programmes, c.c_seme
         FROM tb_course c
         LEFT JOIN tb_semester s ON c.c_semester_id = s.sem_id
         WHERE (c.c_programmes IS NULL OR c.c_programmes = '' OR FIND_IN_SET(?, c.c_programmes) > 0)
-        AND s.sem_status = 'Active'
-        GROUP BY c.c_code
-        ORDER BY c.c_code";
+        AND s.sem_status = 'Active'";
+
+if (!empty($search)) {
+    $sql .= " AND (c.c_code LIKE ? OR c.c_name LIKE ?)";
+}
+
+$sql .= " GROUP BY c.c_code
+          ORDER BY s.sem_year DESC, s.sem_name, c.c_code";
 
 $stmt = mysqli_prepare($con, $sql);
-mysqli_stmt_bind_param($stmt, "s", $student_programme);
+if (!empty($search)) {
+    $search_param = "%$search%";
+    mysqli_stmt_bind_param($stmt, "sss", $student_programme, $search_param, $search_param);
+} else {
+    mysqli_stmt_bind_param($stmt, "s", $student_programme);
+}
 mysqli_stmt_execute($stmt);
 $courses_result = mysqli_stmt_get_result($stmt);
 ?>
 
 <div class="row">
     <div class="col-lg-12">
-        <h2>Courses Registration</h2><br>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Courses Registration</h2>
+            <form action="" method="GET" class="d-flex">
+                <div class="input-group">
+                    <input type="text" name="search" class="form-control" placeholder="Search course code or name..." value="<?php echo htmlspecialchars($search); ?>">
+                    <button class="btn btn-primary" type="submit"><i class="bi bi-search"></i> Search</button>
+                    <?php if (!empty($search)): ?>
+                        <a href="student_register.php" class="btn btn-outline-secondary">Clear</a>
+                    <?php endif; ?>
+                </div>
+            </form>
+        </div>
         
         <?php if (mysqli_num_rows($courses_result) == 0): ?>
-            <div class="alert alert-info">No courses available for your programme at this time.</div>
+            <div class="alert alert-info">
+                <?php echo !empty($search) ? "No courses found matching '" . htmlspecialchars($search) . "'." : "No courses available for your programme at this time."; ?>
+            </div>
         <?php else: 
             $courses_by_sem = [];
             while ($row = mysqli_fetch_assoc($courses_result)) {
