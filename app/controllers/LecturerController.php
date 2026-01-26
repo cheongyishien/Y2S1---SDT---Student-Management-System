@@ -21,8 +21,24 @@ class LecturerController extends Controller {
         $c_code = $_GET['c_code'] ?? '';
         $section = $_GET['section'] ?? '';
         
-        // Use Registration model to get students
         $regModel = $this->model('Registration');
-        // We'll need a method in Registration model for this
+        $courseModel = $this->model('Course');
+
+        $data = [
+            'course' => $courseModel->getCourseDetails($c_code, $section, $_SESSION['sid'] ?? ''), // Sid handling might need refinement
+            'students' => $regModel->getStudentsByCourse($c_code, $section)
+        ];
+        $this->view('lecturer/student_list', $data);
+    }
+
+    public function course_details() {
+        $c_code = $_GET['cid'] ?? '';
+        $section = $_GET['section'] ?? '';
+        $courseModel = $this->model('Course');
+        
+        $data = [
+            'course' => $courseModel->getCourseDetails($c_code, $section, $_SESSION['sid'] ?? '')
+        ];
+        $this->view('lecturer/course_details', $data);
     }
 }

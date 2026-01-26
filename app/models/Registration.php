@@ -46,4 +46,16 @@ class Registration {
         mysqli_stmt_bind_param($stmt, "ii", $id, $student_id);
         return mysqli_stmt_execute($stmt);
     }
+
+    public function getStudentsByCourse($code, $section) {
+        $sql = "SELECT u.*, r.r_status, r.r_timestamp 
+                FROM tb_registration r
+                JOIN tb_user u ON r.r_student_id = u.u_id
+                WHERE r.r_course_code = ? AND r.r_section = ?
+                ORDER BY u.u_name ASC";
+        $stmt = mysqli_prepare($this->db, $sql);
+        mysqli_stmt_bind_param($stmt, "ss", $code, $section);
+        mysqli_stmt_execute($stmt);
+        return mysqli_stmt_get_result($stmt);
+    }
 }

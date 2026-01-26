@@ -8,10 +8,29 @@ class StudentController extends Controller {
     }
 
     public function index() {
-        $this->view('student/dashboard');
+        $regModel = $this->model('Registration');
+        $data = [
+            'registrations' => $regModel->getRegistrationsByStudent($_SESSION['u_id'])
+        ];
+        $this->view('student/dashboard', $data);
     }
 
     public function courses() {
-        // Handle browsing and registering for courses
+        $courseModel = $this->model('Course');
+        $semesterModel = $this->model('Semester');
+        
+        $data = [
+            'courses' => $courseModel->getAllCoursesBySemester($_SESSION['current_sid'] ?? 5), // Default to 5 if not set
+            'semesters' => $semesterModel->getAllSemesters()
+        ];
+        $this->view('student/courses', $data);
+    }
+
+    public function register() {
+        // Handle registration process
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $regModel = $this->model('Registration');
+            // ... (Logic from student_register_process.php)
+        }
     }
 }

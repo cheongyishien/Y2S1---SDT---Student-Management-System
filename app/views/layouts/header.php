@@ -34,8 +34,9 @@
         <?php if(isset($_SESSION['u_type'])): ?>
             <?php if($_SESSION['u_type'] == '01'): // Admin ?>
                 <li class="nav-item">
-                   <a class="nav-link" href="index.php?controller=admin&action=dashboard">Dashboard</a>
+                   <a class="nav-link" href="index.php?controller=admin&action=index">Dashboard</a>
                 </li>
+
                 <li class="nav-item">
                    <a class="nav-link" href="index.php?controller=admin&action=manage_courses">Manage Courses</a>
                 </li>
