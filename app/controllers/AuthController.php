@@ -10,9 +10,8 @@ class AuthController extends Controller {
     public function login_process() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $userModel = $this->model('User');
-            // Using names from old form or new form? I will use new names 'email' and 'password' in the view.
-            $email = $_POST['email']; 
-            $password = $_POST['password'];
+            $email = $_POST['femail']; 
+            $password = $_POST['fpwd'];
 
             $user = $userModel->login($email, $password);
 
@@ -31,9 +30,16 @@ class AuthController extends Controller {
     }
 
     public function register() {
-        // Redirect to the registration form
-        header("Location: ../register.php");
-        exit();
+        $facultyModel = $this->model('Faculty');
+        $programModel = $this->model('Program');
+        $residentialModel = $this->model('Residential'); // Will create this model
+        
+        $data = [
+            'faculties' => $facultyModel->getAllFaculties(),
+            'programs' => $programModel->getAllPrograms(),
+            'colleges' => $this->model('Residential')->getAllColleges()
+        ];
+        $this->view('auth/register', $data);
     }
 
     public function logout() {
@@ -46,13 +52,13 @@ class AuthController extends Controller {
     private function redirectBasedOnRole() {
          $type = $_SESSION['u_type'];
          if ($type == '01') { 
-             header('Location: ../admin_dashboard.php');
+             header('Location: index.php?controller=admin&action=index');
          } elseif ($type == '02') { 
-             header('Location: ../lecturer_dashboard.php');
+             header('Location: index.php?controller=lecturer&action=index');
          } elseif ($type == '03') { 
-             header('Location: ../student_dashboard.php');
+             header('Location: index.php?controller=student&action=index');
          } else {
-             header('Location: ../index.php');
+             header('Location: index.php');
          }
          exit();
     }
